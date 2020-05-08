@@ -16,6 +16,7 @@ confirmed_agg <- covid19.analytics::covid19.JHU.data()
 # =============================================================================
 # Granular Covid Data on India
 # =============================================================================
+
 api_url <- "https://api.covid19india.org/raw_data3.json"
 json_data <- rjson::fromJSON(file = api_url)
 
@@ -24,6 +25,7 @@ json_data <- rjson::fromJSON(file = api_url)
 # =============================================================================
 
 # Store your column names first before dealing with that horrendous list
+
 fields <- names(json_data$raw_data[[1]])  # 20 would-be columns
 
 
