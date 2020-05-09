@@ -21,16 +21,16 @@ matched <- unlist(str_match_all(string = html, pattern = pattern))
 
 covid_datasets <- lapply(as.list(matched), fread)
 
-# Naming them appropriately ---------------------------------------------------
+# Naming the data objects appropriately ---------------------------------------
 
-# Name these datasets according to the CSV names
+
 exclude_chars <- "https://api.covid19india.org/csv/latest/"
 
-# Store names to map to each dataset
 dataset_names <- substr(x = matched, 
                         start = 1 + nchar(exclude_chars), 
                         stop = nchar(matched)- nchar(".csv"))
 
+# assigning variable names
 for(i in seq_along(dataset_names)){
   assign(dataset_names[i], covid_datasets[[i]])
 }
