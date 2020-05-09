@@ -1,0 +1,37 @@
+rm(list = ls())
+
+# Load relevant libraries -----------------------------------------------------
+library(stringr)
+library(data.table)
+
+# =============================================================================
+# COVID 19-India API: A volunteer-driven, crowdsourced database 
+# for COVID-19 stats & patient tracing in India
+# =============================================================================
+
+url <- "https://api.covid19india.org/csv/"  
+
+# List out all CSV files to source --------------------------------------------
+
+html <- paste(readLines(url), collapse="\n")
+pattern <- "https://api.covid19india.org/csv/latest/.*csv"
+matched <- unlist(str_match_all(string = html, pattern = pattern))
+
+# Downloading the Data --------------------------------------------------------
+
+covid_datasets <- lapply(as.list(matched), fread)
+
+# Naming them appropriately ---------------------------------------------------
+
+# Name these datasets according to the CSV names
+exclude_chars <- "https://api.covid19india.org/csv/latest/"
+
+# Store names to map to each dataset
+dataset_names <- substr(x = matched, 
+                        start = 1 + nchar(exclude_chars), 
+                        stop = nchar(matched)- nchar(".csv"))
+
+for(i in seq_along(dataset_names)){
+  assign(dataset_names[i], covid_datasets[[i]])
+}
+
