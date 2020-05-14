@@ -1,9 +1,23 @@
 library(ggplot2)
 library(visreg)
+library(lubridate)
 
-# Extrapolate Trends
+# =============================================================================
+# case_time_series dataset 
+# =============================================================================
 
-# Observed Trend b/w Day 40 and Today
+# Convert date in "dd Month" character format to Date objects with lubridate
+case_ts_dates <- case_time_series$Date
+case_time_series$Date <- lubridate::dmy(paste0(substr(case_ts_dates, 
+                                                      start = 1, stop = 2), "-", 
+                                               substr(case_ts_dates, 
+                                                      start = 4, stop = 6), 
+                                               "-2020"))
+
+
+# Extrapolate Trends ----------------------------------------------------------
+
+# Observed Trend b/w Day 40 and Day 101
 trends <- log(case_time_series$`Total Confirmed`)[40:101]
 
 model_data <- data.frame(X = 1:length(trends), y = trends)
@@ -28,12 +42,11 @@ stop_pred <- start_pred + 14
 predicted <- predict(object = modl, data.frame(X = start_pred:stop_pred))
 
 predicted_transformed <- exp(predicted^(1/3))
-predicted_transformed
 
 plot(case_time_series$`Total Confirmed`, type = 'l')
 
-dates <- c(case_time_series$Date, case_time_series$Date[nrow(case_time_series)] + c(1:8))
-cases <- c(case_time_series$`Total Confirmed`, predicted_transformed)
+dates <- c(case_time_series$Date[1:101], case_time_series$Date[102] + 0:7)
+cases <- c(case_time_series$`Total Confirmed`[1:101], predicted_transformed[1:8])
 
 datset <- data.frame(Date = dates, Cases = cases)
 dates_highlight <- tail(datset$Date, n = 8)
