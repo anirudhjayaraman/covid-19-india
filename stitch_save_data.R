@@ -8,13 +8,14 @@ rm(list = ls())
 library(tidyverse)
 library(lubridate)
 
-# Downloading and sourcing patient level data to the R environement -----------
-source(paste0(project_dir, "source_patient_data.R"))
-
 # Relevant directories --------------------------------------------------------
 project_dir <- "C:/git/covid-19/"
 output_dir <- paste0(project_dir, "output_data/")
 download_dir <- paste0(project_dir, "downloaded_data/")
+
+# Downloading and sourcing patient level data to the R environement -----------
+source(paste0(project_dir, "source_patient_data.R"))
+
 
 # =============================================================================
 # stitch patient level data together 

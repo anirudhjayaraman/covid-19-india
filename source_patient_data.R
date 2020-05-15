@@ -1,6 +1,5 @@
-rm(list = ls())
-
 # Load relevant libraries -----------------------------------------------------
+
 library(stringr)
 library(data.table)
 

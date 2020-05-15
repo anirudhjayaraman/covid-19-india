@@ -1,18 +1,16 @@
-library(zoo)
-library(lubridate)
-library(ggplot2)
+rm(list = ls())
+
+# Relevant DIrectories --------------------------------------------------------
+
+project_dir <- "C:/git/covid-19/"
+output_dir <- paste0(project_dir, "output_data/")
+download_dir <- paste0(project_dir, "downloaded_data/")
 
 # =============================================================================
-# case_time_series dataset 
+# Source and stitch the data
 # =============================================================================
 
-# Convert date in "dd Month" character format to Date objects with lubridate
-case_ts_dates <- case_time_series$Date
-case_time_series$Date <- lubridate::dmy(paste0(substr(case_ts_dates, 
-                                                      start = 1, stop = 2), "-", 
-                                               substr(case_ts_dates, 
-                                                      start = 4, stop = 6), 
-                                               "-2020"))
+source(paste0(project_dir, "source_stitch.R"))
 
 # DAILY CUMULATIVE EVOLUTION --------------------------------------------------
 
