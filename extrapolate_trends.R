@@ -74,5 +74,8 @@ g <- ggplot(datset, aes(x = Date, y = cases, color = highlight, group = 1)) +
 plot(g)
 
 
-h <- visreg(modl, "X", gg = TRUE)
+h <- visreg(modl, "X", gg = TRUE) +
+  labs(titile = "Model Fit on data between 09-Mar and 09-May",
+       x = "Day Count since 09-Mar (up to 09-May)",
+       y = "Cube of the log of Total Confirmed (Cumulative)")
 plot(h)
