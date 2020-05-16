@@ -4,7 +4,7 @@ Based on some simple analyses, I conclude that through most of Lockdown 1 and Lo
 
 ![](output/plots/plot_01.png)
 
-In the figure below, the dots correspond to actual cumulative cases (since 30th January) on a given day. The line corresponds to model predictions. However, the y-axis plots values of the cube of the logarithm of cumulative cases between 30-Jan and the $i$-th date since 09-Mar, with $i$ plotted on the x-axis.
+In the figure below, the dots correspond to actual cumulative cases (since 30th January) on a given day. The line corresponds to model predictions. However, the y-axis plots values of the cube of the logarithm of cumulative cases between 30-Jan and the i-th date since 09-Mar, with i plotted on the x-axis.
 The fit looks good and explains > 99% of in-sample variance.
 
 ![](output/plots/plot_02.png)
