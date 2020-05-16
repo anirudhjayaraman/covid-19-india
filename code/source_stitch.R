@@ -94,12 +94,18 @@ raw_data3 <- raw_data3[ , match(names(raw_data3), names(raw_data1))]
 raw_data <- rbind(raw_data1, raw_data2, raw_data3)
 
 # ENSURE DATES ARE IN THE DATE FORMAT AND NOT CHARACHTER ----------------------
-# data.frame(variable = names(raw_data), class = class(sapply(raw_data, class)))
 
 date_cols <- names(raw_data)[grep("Date", names(raw_data))]
 
 raw_data <- raw_data %>% mutate_at(date_cols, lubridate::dmy)
-  
+
+# State Patient Number needs to be numeric ------------------------------------
+numer_cols <- names(raw_data)[grep("Number", names(raw_data))]
+
+raw_data <- raw_data %>% mutate_at(numer_cols, as.numeric)
+
+# Age Bracket has to be Numeric -----------------------------------------------
+raw_data$`Age Bracket` <- as.numeric(raw_data$`Age Bracket`)
 
 # =============================================================================
 # Dates in the CASE TIME SERIES data are messed up
@@ -116,6 +122,12 @@ month_chars <- substr(case_ts_dates, start = 4, stop = 6)
 # transform Date variable into an easily readable format
 case_time_series$Date <- 
   lubridate::dmy(paste0(date_chars, "-", month_chars, "-2020"))
+
+# =============================================================================
+# Dates in the STATE WISE DAILY data are strings
+# state_wise_daily
+# =============================================================================
+state_wise_daily$Date <- lubridate::dmy(state_wise_daily$Date)
 
 ###############################################################################
 ############              THAT'S ALL FOLKS!                 ###################
