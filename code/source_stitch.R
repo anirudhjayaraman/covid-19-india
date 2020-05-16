@@ -1,5 +1,3 @@
-rm(list = ls())
-
 # Load relevant libraries -----------------------------------------------------
 
 library(stringr)
