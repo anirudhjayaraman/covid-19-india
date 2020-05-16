@@ -1,0 +1,3 @@
+[submodule "submodules/awesome-coronavirus"]
+	path = submodules/awesome-coronavirus
+	url = https://github.com/soroushchehresa/awesome-coronavirus.git
