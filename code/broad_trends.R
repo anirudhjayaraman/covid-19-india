@@ -10,7 +10,7 @@ download_dir <- paste0(project_dir, "downloaded_data/")
 # Source and stitch the data
 # =============================================================================
 
-source(paste0(project_dir, "source_stitch.R"))
+source(paste0(project_dir, "code/source_stitch.R"))
 
 # DAILY CUMULATIVE EVOLUTION --------------------------------------------------
 

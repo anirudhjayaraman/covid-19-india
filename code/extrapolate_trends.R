@@ -10,7 +10,7 @@ download_dir <- paste0(project_dir, "downloaded_data/")
 # Source and stitch the data
 # =============================================================================
 
-source(paste0(project_dir, "source_stitch.R"))
+source(paste0(project_dir, "code/source_stitch.R"))
 
 # =============================================================================
 # Extrapolate Trends based on Data b/w 09-Mar and 09-May for predictions 
@@ -19,6 +19,7 @@ source(paste0(project_dir, "source_stitch.R"))
 # #############################################################################
 # After not more than 20 minutes of playing with the data 
 # (meaning, there could be homework done here)
+#
 # Observed Trend b/w Day 40 and Day 101
 ###############################################################################
 
