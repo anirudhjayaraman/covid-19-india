@@ -12,8 +12,5 @@ source(paste0(project_dir, "code/source_stitch.R"))
 
 # =============================================================================
 # Maharashtra 
-mh_ <- raw_data %>% filter(`State code` == "MH" & !is.na(`Patient Number`)) %>% 
+mh <- raw_data %>% filter(`State code` == "MH" & !is.na(`Patient Number`)) %>% 
   arrange(`Patient Number`)
-
-
-
