@@ -93,6 +93,13 @@ raw_data3 <- raw_data3[ , match(names(raw_data3), names(raw_data1))]
 
 raw_data <- rbind(raw_data1, raw_data2, raw_data3)
 
+# ENSURE DATES ARE IN THE DATE FORMAT AND NOT CHARACHTER ----------------------
+# data.frame(variable = names(raw_data), class = class(sapply(raw_data, class)))
+
+date_cols <- names(raw_data)[grep("Date", names(raw_data))]
+
+raw_data <- raw_data %>% mutate_at(date_cols, lubridate::dmy)
+  
 
 # =============================================================================
 # Dates in the CASE TIME SERIES data are messed up
