@@ -12,10 +12,14 @@ All code are kept in code/
 source("code/state_wise_data.R")
 
 # Print names of datasets for states (including UTs)
-print(states)
+names(states_data)
+
+# Data for the last 6 days for all states / UTs
+lapply(states_data, tail)  # states_data is a list storing dataframes of alls states
 
 # Data for Maharashtra
-View(MH)
+View(MH)  # or
+View(states_data$MH)
 ```
 
 
