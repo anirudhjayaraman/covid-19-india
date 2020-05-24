@@ -27,21 +27,17 @@ View(states_data$MH)
 	* Confirmed (Daily, Total)
 	* Recovered (Daily, Total)
 	* Deceased (Daily, Total)
-- **extrapolate_trends.R**: uses a time series of cumulative confirmed cases between to fit models between $log(y)^{exponent}$ and time, where $y$ is the total (cumulative) confirmed cases.
+	
+- **extrapolate_trends.R**: Attempts to model the exponent in <img src="https://render.githubusercontent.com/render/math?math=log(y)^{exponent}"> regressed against time (in days), where *y* is the total(cumulative) number of cases on a given date.
 
 
 
 # Some Insights from Modeling the Evolution of Total Confirmed Covid-19 Cases in India
 
-
-Based on some simple analyses, I conclude that through most of Lockdown 1 and Lockdown 2, Covid-19 cases in India have followed a predictable trend. Based on a model fit on 62 observations, my projections (in red) for the total number of confirmed cases for 17-May is a little over 100,000. 
-
-![Figure 1: Anticipated Trends between 10-May and 17-May based on Historical Trends](output/plots/plot_01.png)
-
-In the figure below, the dots correspond to total confirmed (cumulative) number of cases since the first Covid-19 case was reported in India 30 Jan. The blue line corresponds to model predictions. The numbers of the y-axis, however, are transformed.  **The y-axis plots values of the *cube* of the *log* of cumulative cases between 30-Jan and the i-th date since 09-Mar, with i plotted on the x-axis.**
-The fit looks good and explains > 99% of in-sample variance.
-
-![Figure 2: Goodness-of-Fit](output/plots/plot_02.png)
+India's Covid-19 situation can be explained by a simple model regressing an exponent of the logarithm of the total confirmed cases on a given date with respect to time (in days). The following plots depict the results of rolling-window regressions for calibration windows ranging between 25 days and 60 days. An increasing estimated exponent is a good thing - it means the rate of growth of total (cumulative) confirmed cases is decreasing.
+![](output/plots/plot_03.png)
+The estimated exponent for a calibration period is chosen to maximize the adjusted R-squared in the exponent iterval between 1 and 10. Time series of adjsuted R-squared of models fit using estimated exponents (corresponding to each calibration window) are presented below.  
+![](output/plots/plot_04.png)
 
 More analyses and models are expected to be updated to this space as more data comes in.
 
