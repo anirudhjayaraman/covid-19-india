@@ -1,82 +1,135 @@
 rm(list = ls())
 
-# Relevant DIrectories --------------------------------------------------------
+# Relevant Libraries ----------------------------------------------------------
+library(ggplot2)
+library(dplyr)
+library(hrbrthemes)
+library(gridExtra)
+
+# Relevant Directories --------------------------------------------------------
 
 project_dir <- "C:/git/covid-19/"
-output_dir <- paste0(project_dir, "output_data/")
+output_dir <- paste0(project_dir, "output/")
 download_dir <- paste0(project_dir, "downloaded_data/")
 
 # =============================================================================
 # Source and stitch the data
 # =============================================================================
 
-source(paste0(project_dir, "code/source_stitch.R"))
+source(paste0(project_dir, "code/harvest_data.R"))
 
 # =============================================================================
-# Extrapolate Trends based on Data b/w 09-Mar and 09-May for predictions 
+# Model the data
 # =============================================================================
 
-# #############################################################################
-# After not more than 20 minutes of playing with the data 
-# (meaning, there could be homework done here)
-#
-# Observed Trend b/w Day 40 and Day 101
-###############################################################################
+# Exclude the last 3-5 observations to model (train) the data
+model_data <- case_time_series[1:(nrow(case_time_series)-3), 
+                               c("Date", "Total Confirmed")]
 
-trends <- log(case_time_series$`Total Confirmed`)[40:101]
-model_data <- data.frame(X = 1:length(trends), y = trends)
+# Plot Model Data -------------------------------------------------------------
+model_data %>%
+  # tail(50) %>%
+  ggplot(aes(x = Date, y = `Total Confirmed`)) +
+  geom_line(color="grey") +
+  geom_point(shape=21, color="black", fill="#69b3a2", size=2) +
+  theme_ipsum() +
+  ggtitle("Evolution of Total Confirmed Covid-19 Cases")
+
+# -----------------------------------------------------------------------------
+# Model the Exponent
+# -----------------------------------------------------------------------------
+
+# Use log(Total Confirmed) as dependent variable
+model_data$`Log Total Confirmed` <- log(model_data$`Total Confirmed`)
 
 
-possible_exponents <- seq(1.5,4,0.01)
-adjRSq <- rep(0, length(possible_exponents))
+calibration_periods <- c(20,25,30,35,40,45,50,55,60)
+exponent_plots <- list()
+adjRSq_plots <- list()
+adjRSq_densities <- list()
 
-for(i in possible_exponents){
-  modl <- lm(formula = y^i ~ X, data = model_data)
-  adjRSq[which(possible_exponents == i)] <- 
-    summary(lm(trends^i ~ c(1:length(trends))))$adj.r.squared
+start_time <- Sys.time()
+
+for(k in seq_along(calibration_periods)){
+  # Config for rolling-window calibrations
+  from <- 1
+  calibration_period <- calibration_periods[k]
+  till <- nrow(model_data) - calibration_period + 1
+  
+  # instantiate time series of exponents and adjusted R-squared value
+  # on the basis of which the exponent was chosen
+  exponents <- chosen_adjRSq <- rep(0, till)
+  
+  
+  # Model Exponents on a moving-window basis
+  for(i in from:till){
+    exponents_range <- seq(1,10,0.05)
+    adjRSq <- rep(0, length(exponents_range))
+    
+    dat <- model_data[i:(i + calibration_period - 1), ]
+    names(dat) <- c("Date","y","ln_y")
+    
+    for(j in seq_along(exponents_range)){
+      exponent <- exponents_range[j]
+      modl <- lm(formula = ln_y^exponent ~ Date, data = dat)
+      adjRSq[j] <- summary(modl)$adj.r.squared
+    }
+    
+    exponents[i] <- exponents_range[which.max(adjRSq)]
+    chosen_adjRSq[i] <- max(adjRSq)
+  }
+  
+  # Ensure plot dates reflect last date of calibration period
+  adjustment <- calibration_period - 1
+  frOm <- from + adjustment
+  ti1l <- till + adjustment
+  
+  # Data to use for plotting
+  exponents_data <- data.frame(Date = model_data$Date[frOm:ti1l],
+                               Exponent = exponents)
+  adjRSq_data <- data.frame(Date = model_data$Date[frOm:ti1l],
+                            AdjRSq = chosen_adjRSq)
+  
+  # Plot of moving window exponents for a given calibration period 
+  g <- exponents_data %>%
+    ggplot(aes(x = Date, y = Exponent)) +
+    geom_line(color="green", size = 1.2) +
+    geom_point(shape=21, color="black", fill="#69b3a2", size=2) +
+    theme_ipsum_pub(plot_title_size = 14) +
+    ggtitle(paste0("Evolution of modeled ", calibration_period, "-day exponent"))
+  
+  r <- adjRSq_data %>%
+    ggplot(aes(x = Date, y = AdjRSq)) + 
+    geom_line(color = "black", size = 1.2) + 
+    theme_ipsum_pub(plot_title_size = 10) +
+    ggtitle(paste0("Evolution of Adj.R-Sq (Max) based on ", calibration_period, "-day calibration period"))
+  
+  exponent_plots[[k]] <- g
+  adjRSq_plots[[k]] <- r
+  
 }
 
-exponent <- possible_exponents[which.max(adjRSq)]  # 2.71
+time_taken <- Sys.time() - start_time
+print(time_taken)
 
-# overriding exponent
-exponent <- 3
+for(p in 1:length(exponent_plots)){
+  assign(paste0("plot_", p), exponent_plots[[p]])
+  assign(paste0("plot_", p + length(exponent_plots)), 
+         adjRSq_plots[[p]])
+}
 
-model_data <- data.frame(X = 1:length(trends), y = trends)
-modl <- lm(formula = y^exponent ~ X, data = model_data)
-summary(modl)
+# Exponent plots
+grid.arrange(plot_1, plot_2, plot_3,
+             plot_4, plot_5, plot_6,
+             plot_7, plot_8, plot_9, ncol = 3)
 
-start_pred <- nrow(model_data) + 1
-stop_pred <- start_pred + 14
+# Adjusted R-Squared plots
+grid.arrange(plot_10, plot_11, plot_12,
+             plot_13, plot_14, plot_15,
+             plot_16, plot_17, plot_18, ncol = 3)
 
-predicted <- predict(object = modl, data.frame(X = start_pred:stop_pred))
-
-predicted_transformed <- exp(predicted^(1/exponent))
-
-plot(case_time_series$`Total Confirmed`, type = 'l')
-
-dates <- c(case_time_series$Date[1:101], 
-           case_time_series$Date[102] + 0:7)
-cases <- c(case_time_series$`Total Confirmed`[1:101], 
-           predicted_transformed[1:8])
-
-datset <- data.frame(Date = dates, Cases = cases)
-dates_highlight <- tail(datset$Date, n = 8)
-datset$highlight <- ifelse(datset$Date %in% dates_highlight, "red", "black")
-
-
-
-g <- ggplot(datset, aes(x = Date, y = cases, color = highlight, group = 1)) + 
-  geom_line(size = 1) +
-  scale_colour_identity(datset$highlight) + 
-  labs(title = "Confirmed Cases: Historical (up to 09-May) and Projected",
-       x = "Date",
-       y = "Confirmed Cases")
-
-plot(g)
-
-
-h <- visreg(modl, "X", gg = TRUE) +
-  labs(titile = "Model Fit on data between 09-Mar and 09-May",
-       x = "Day Count since 09-Mar (up to 09-May)",
-       y = "Cube of the log of Total Confirmed (Cumulative)")
-plot(h)
+# h <- visreg(modl, "X", gg = TRUE) +
+#   labs(titile = "Model Fit on data between 09-Mar and 09-May",
+#        x = "Day Count since 09-Mar (up to 09-May)",
+#        y = "Cube of the log of Total Confirmed (Cumulative)")
+# plot(h)

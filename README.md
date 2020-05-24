@@ -3,10 +3,10 @@
 All code are kept in code/
 
 ## Sourcing / Downloading / Cleaning Data -
-- **source_patient_data.R**: scrapes through the [Covid-19 India Tracker](https://api.covid19india.org/) to load latest Covid-19 data on India into your R-environment.
-- **download_data.R**: can be run to download the data (daily, weekly or to a frequency that matches one's need) to a particular directory. It does what *source_patient_data.R* does, and in addition also saves all the loaded datasets into a directory of choice.
-- **source_stitch.R**: does what *source_patient_data.R* does, and in addition also stitches some disaggregated raw data and ensures dates are in workable formats.
+- **source_data.R**: scrapes through the [Covid-19 India Tracker](https://api.covid19india.org/) to load latest Covid-19 data on India into your R-environment.
+- **harvest_data.R**: does what *source_data.R* does, and in addition also stitches some disaggregated raw data and ensures dates are in workable formats.
 - **state_wise_data.R**: collates state-wise data into state-specific time series datasets for each state. The data contains daily and cumulative confirmed, recovered and deceased cases for a given state from 14-Mar-2020. In order to check which state datasets are available at any given time:
+
 ```r
 # Assuming your working directory is set to your local repo directory
 source("code/state_wise_data.R")
@@ -22,16 +22,17 @@ View(MH)  # or
 View(states_data$MH)
 ```
 
-
 ## Analyzing Data -
-- **broad_trends.R**: calls source_stitch.R and analyzes the *case_time_series.csv* dataset that has the following fields:
+- **broad_trends.R**: calls *harvest_data.R* and analyzes the *case_time_series.csv* dataset that has the following fields:
 	* Confirmed (Daily, Total)
 	* Recovered (Daily, Total)
 	* Deceased (Daily, Total)
-- **extrapolate_trends.R**: uses a time series of cumulative confirmed cases between 09-Mar-2020 and 09-May-2020 to fit a model that extrapolates on the fit to predict total confirmed cases up to 17-May-2020 (end of lockdown 3.0)
+- **extrapolate_trends.R**: uses a time series of cumulative confirmed cases between to fit models between $log(y)^{exponent}$ and time, where $y$ is the total (cumulative) confirmed cases.
 
 
-# Humble First Attempt at Modeling the Evolution of Total Confirmed Covid-19 Cases in India
+
+# Some Insights from Modeling the Evolution of Total Confirmed Covid-19 Cases in India
+
 
 Based on some simple analyses, I conclude that through most of Lockdown 1 and Lockdown 2, Covid-19 cases in India have followed a predictable trend. Based on a model fit on 62 observations, my projections (in red) for the total number of confirmed cases for 17-May is a little over 100,000. 
 

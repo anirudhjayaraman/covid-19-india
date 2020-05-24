@@ -3,21 +3,20 @@ rm(list = ls())
 # Relevant DIrectories --------------------------------------------------------
 
 project_dir <- "C:/git/covid-19/"
-output_dir <- paste0(project_dir, "output_data/")
+output_dir <- paste0(project_dir, "output/")
 download_dir <- paste0(project_dir, "downloaded_data/")
 
 # =============================================================================
 # Source and stitch the data
 # =============================================================================
 
-source(paste0(project_dir, "code/source_stitch.R"))
+source(paste0(project_dir, "code/harvest_data.R"))
 
 # DAILY CUMULATIVE EVOLUTION --------------------------------------------------
 
-daily_evolution <- case_time_series %>% melt(id.vars = "Date") %>%
-                                        filter(variable %in% c('Total Confirmed', 
-                                                               'Total Deceased', 
-                                                               'Total Recovered'))
+daily_evolution <- as.data.table(case_time_series) %>% 
+  melt(id.vars = "Date") %>% 
+  filter(variable %in% c('Total Confirmed','Total Deceased','Total Recovered'))
 
 
 # =============================================================================
@@ -51,10 +50,9 @@ plot(g)
 
 # EVOLUTION OF DAILY STATUS ---------------------------------------------------
 
-daily_evolution <- case_time_series %>% melt(id.vars = "Date") %>%
-  filter(variable %in% c('Daily Confirmed', 
-                         'Daily Deceased', 
-                         'Daily Recovered'))
+daily_evolution <- as.data.table(case_time_series) %>% 
+  melt(id.vars = "Date") %>%
+  filter(variable %in% c('Daily Confirmed','Daily Deceased','Daily Recovered'))
 
 
 # =============================================================================
