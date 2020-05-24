@@ -4,9 +4,19 @@ All code are kept in code/
 
 ## Sourcing / Downloading / Cleaning Data -
 - **source_patient_data.R**: scrapes through the [Covid-19 India Tracker](https://api.covid19india.org/) to load latest Covid-19 data on India into your R-environment.
-- **download_data.R**: This can be run to download the data (daily, weekly or to a frequency that matches one's need) to a particular directory. It does what *source_patient_data.R* does, and in addition also saves all the loaded datasets into a directory of choice.
+- **download_data.R**: can be run to download the data (daily, weekly or to a frequency that matches one's need) to a particular directory. It does what *source_patient_data.R* does, and in addition also saves all the loaded datasets into a directory of choice.
 - **source_stitch.R**: does what *source_patient_data.R* does, and in addition also stitches some disaggregated raw data and ensures dates are in workable formats.
+- **state_wise_data.R**: collates state-wise data into state-specific time series datasets for each state. The data contains daily and cumulative confirmed, recovered and deceased cases for a given state from 14-Mar-2020. In order to check which state datasets are available at any given time:
+```r
+# Assuming your working directory is set to your local repo directory
+source("code/state_wise_data.R")
 
+# Print names of datasets for states (including UTs)
+print(states)
+
+# Data for Maharashtra
+View(MH)
+```
 
 
 ## Analyzing Data -
