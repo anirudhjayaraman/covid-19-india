@@ -35,8 +35,11 @@ View(states_data$MH)
 # Some Insights from Modeling the Evolution of Total Confirmed Covid-19 Cases in India
 
 India's Covid-19 situation can be explained by a simple model regressing an exponent of the logarithm of the total confirmed cases on a given date with respect to time (in days). The following plots depict the results of rolling-window regressions for calibration windows ranging between 25 days and 60 days. An increasing estimated exponent is a good thing - it means the rate of growth of total (cumulative) confirmed cases is decreasing.
+
 ![](output/plots/plot_03.png)
+
 The estimated exponent for a calibration period is chosen to maximize the adjusted R-squared in the exponent iterval between 1 and 10. Time series of adjsuted R-squared of models fit using estimated exponents (corresponding to each calibration window) are presented below.  
+
 ![](output/plots/plot_04.png)
 
 More analyses and models are expected to be updated to this space as more data comes in.
