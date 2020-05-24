@@ -15,8 +15,10 @@ source(paste0(project_dir, "code/source_stitch.R"))
 # GET CLEAN STATE-WISE DATA
 # =============================================================================
 
+# Names of all states / UTs in the 'state_wise_daily' dataset
 states <- names(state_wise_daily)[3:ncol(state_wise_daily)]
 
+# Creates separate state level data, harvesting the 'state_wise_daily' dataset
 
 for(i in 1:length(states)){
   state_code <- states[i]
@@ -49,5 +51,8 @@ for(i in 1:length(states)){
   
   assign(as.character(state_code), df)
 }
+
+# Store curated state data in a list
+states_data <- mget(states)
 
 
