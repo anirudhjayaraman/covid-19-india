@@ -25,4 +25,5 @@ View(states_data$MH)
 	* Confirmed (Daily, Total)
 	* Recovered (Daily, Total)
 	* Deceased (Daily, Total)
-- **extrapolate_trends.R**: uses a time series of cumulative confirmed cases between 09-Mar-2020 and 09-May-2020 to fit a model that extrapolates on the fit to predict total confirmed cases up to 17-May-2020 (end of lockdown 3.0)
+	
+- **extrapolate_trends.R**: Attempts to model the exponent in <img src="https://render.githubusercontent.com/render/math?math=log(y)^{exponent}"> regressed against time (in days), where *y* is the total(cumulative) number of cases on a given date.
