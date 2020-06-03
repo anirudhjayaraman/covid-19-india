@@ -1,6 +1,0 @@
-[submodule "submodules/awesome-coronavirus"]
-	path = submodules/awesome-coronavirus
-	url = https://github.com/soroushchehresa/awesome-coronavirus.git
-[submodule "submodules/covid-19"]
-	path = submodules/covid-19
-	url = https://github.com/datasets/covid-19
