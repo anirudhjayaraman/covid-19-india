@@ -5,6 +5,7 @@ library(lubridate)
 library(ggplot2)
 library(visreg)
 library(lubridate)
+library(readr)
 
 
 # Relevant directories --------------------------------------------------------
@@ -65,3 +66,8 @@ case_time_series$Date <-
 # =============================================================================
 state_wise_daily$Date <- lubridate::dmy(state_wise_daily$Date)
 
+# =============================================================================
+# Download your data at this point
+# =============================================================================
+
+source(paste0(project_dir, "code/save_data.R"))
