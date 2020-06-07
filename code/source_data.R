@@ -12,16 +12,17 @@ url <- "https://api.covid19india.org/csv/"
 
 # List out all CSV files to source --------------------------------------------
 
-html <- paste(readLines(url), collapse="\n")
+html <- url %>% readLines %>% paste(collapse = "\n")
+
 pattern <- "https://api.covid19india.org/csv/latest/.*csv"
-matched <- unlist(str_match_all(string = html, pattern = pattern))
+
+matched <- html %>% str_match_all(pattern = pattern) %>% unlist
 
 # Downloading the Data --------------------------------------------------------
 
-covid_datasets <- lapply(as.list(matched), fread)
+covid_datasets <- matched %>% as.list %>% lapply(fread)
 
 # Naming the data objects appropriately ---------------------------------------
-
 
 exclude_chars <- "https://api.covid19india.org/csv/latest/"
 
@@ -30,6 +31,7 @@ dataset_names <- substr(x = matched,
                         stop = nchar(matched)- nchar(".csv"))
 
 # assigning variable names
+
 for(i in seq_along(dataset_names)){
   assign(dataset_names[i], covid_datasets[[i]])
 }
