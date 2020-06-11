@@ -55,3 +55,29 @@ for(i in 1:length(states)){
 
 
 plot_state_trends()
+
+
+# Total Deceased ----------------------------------------------------------
+
+for(i in 1:length(states)){
+  # get COVID-19 dataset for i-th state
+  dat <- get(states[i])
+  
+  # Sve the plot
+  assign(paste0("p",i), 
+         dat %>%
+           ggplot(mapping = aes(x = Date)) +
+           geom_line(mapping = aes(y = `Total Deceased`), 
+                     color = 'forestgreen', size = 1, show.legend = TRUE) +
+           xlab("") + ylab("") +
+           ggtitle(paste0(states[i], " Total Deceased")))
+}
+
+
+plot_state_trends()
+
+
+
+# Exploring Trends - Playground -------------------------------------------
+
+
