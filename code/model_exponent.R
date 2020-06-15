@@ -50,8 +50,10 @@ model_exponent <- function(df, calibration_horizon = 30,
   
   result_obj <- list()
   
+  # Estimated optimal model exponent ------------------------------------------
   exp_nent <- exponent_range[which.max(adj_R_Sq)]
   
+  # Plot illustrating optimal model exponent ----------------------------------
   plot_data <- data.frame(exponents = exponent_range,
                           adj_R_Sq = adj_R_Sq)
   plot_goodness_of_fit <- plot_data %>%
@@ -62,6 +64,7 @@ model_exponent <- function(df, calibration_horizon = 30,
     xlab("Exponent") + 
     ylab("Adjusted R-Squared")
   
+  # Store the results ---------------------------------------------------------
   result_obj[[1]] <- exp_nent
   result_obj[[2]] <- plot_goodness_of_fit
   names(result_obj) <- c("Exponent","OptimalExponent")
