@@ -2,14 +2,14 @@
 
 library(tidyverse)
 library(lubridate)
-library(ggplot2)
 library(visreg)
-library(lubridate)
-library(readr)
+library(config)
 
+# Specify config --------------------------------------------------------------
+conf <- config::get(file = "conf/config.yml")
 
 # Relevant directories --------------------------------------------------------
-project_dir <- "C:/git/covid-19/"
+project_dir <- conf$project_dir
 output_dir <- paste0(project_dir, "output/")
 download_dir <- paste0(project_dir, "downloaded_data/")
 
@@ -70,4 +70,6 @@ state_wise_daily$Date <- lubridate::dmy(state_wise_daily$Date)
 # Download your data at this point
 # =============================================================================
 
-source(paste0(project_dir, "code/save_data.R"))
+if(conf$save){
+  source(paste0(project_dir, "code/save_data.R"))
+}
