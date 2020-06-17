@@ -1,0 +1,95 @@
+---
+title: "Covid-19 in India"
+author: "Anirudh Jayaraman"
+date: "6/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Preliminaries
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(visreg)
+library(gridExtra)
+library(config)
+```
+
+```{r}
+# Relevant directories --------------------------------------------------------
+project_dir <- "C:/git/Covid-19/"
+output_dir <- paste0(project_dir, "output/")
+download_dir <- paste0(project_dir, "downloaded_data/")
+
+# Specify config --------------------------------------------------------------
+conf <- config::get(file = paste0(project_dir, "conf/config.yml") )
+```
+
+Sourcing the data...
+```{r}
+source(paste0(project_dir, "code/source_data.R"))
+```
+
+Some stitching is required because the data are in chunks
+```{r}
+# Store all raw_data1, raw_data2, ... variables (dataframes) in a list 
+raw_datasets <- mget(ls()[grep("raw_data[0-9]", ls(), fixed = FALSE)])
+
+# Convert the patient level datasets from data.table to data.frame
+raw_datasets <- raw_datasets %>%
+  lapply(as.data.frame)
+```
+
+Ensure information in the datasets is complete
+```{r}
+# Ensure data corresponds to non-empty time stamps
+case_time_series <- case_time_series %>% 
+  filter(!is.na(Date) & Date != "")
+
+state_wise_daily <- state_wise_daily %>% 
+  filter(!is.na(Date) & Date != "")
+```
+
+Dates in case_time_series data are not in a usable Date format
+```{r}
+case_time_series %>% 
+  pull(Date)
+```
+
+let's correct that...
+```{r}
+# Convert date in "dd Month" character format to Date objects with lubridate
+case_ts_dates <- case_time_series %>%
+  pull(Date)
+
+# substrings corresponding to date and month
+date_chars <- case_ts_dates %>% substr(start = 1, stop = 2)
+month_chars <- case_ts_dates %>% substr(start = 4, stop = 6)
+
+# transform Date variable into an easily readable format
+case_time_series <- case_time_series %>%
+  mutate(Date = lubridate::dmy(paste0(date_chars, "-", month_chars, "-2020")))
+```
+
+Dates in state_wise_daily are strings
+```{r}
+state_wise_daily %>%
+  pull(Date) %>% class
+
+state_wise_daily %>%
+  pull(Date)
+```
+
+```{r}
+state_wise_daily <- state_wise_daily %>%
+  mutate(Date = lubridate::dmy(Date))
+```
+
+```{r}
+state_wise_daily$Date %>% class
+```
+
