@@ -9,7 +9,7 @@ library(config)
 conf <- config::get(file = "conf/config.yml")
 
 # Relevant directories --------------------------------------------------------
-project_dir <- conf$project_dir
+project_dir <- "C:/git/covid-19/"
 output_dir <- paste0(project_dir, "output/")
 download_dir <- paste0(project_dir, "downloaded_data/")
 
