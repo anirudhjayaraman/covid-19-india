@@ -1,6 +1,6 @@
 # Relevant libraries ----------------------------------------------------------
 library(tidyverse)
-
+library(reshape2) # for melt
 # Relevant directories --------------------------------------------------------
 
 project_dir <- "C:/git/covid-19/"
@@ -27,4 +27,16 @@ total_confirmed$Date <- states_data$DL$Date  # use any state's dates (here DL)
 # rename column names of the dataset
 names(total_confirmed) <- c(names(states_data), "Date")
 
+# Plotting data
+plotting_data <- total_confirmed %>% 
+  melt(variable.name = "State", value.name = "TotalConfirmed") %>%
+  filter(State != "Date")
+
+plotting_data$Date <- rep(total_confirmed$Date,
+                          length(names(states_data)))
+
 # plot state-wise total confirmed for states with cases above a threshold
+plotting_data %>%
+  ggplot(mapping = aes(x = Date, y = TotalConfirmed)) + 
+  geom_line(mapping = aes(y = TotalConfirmed)) + 
+  facet_wrap(~ State)
