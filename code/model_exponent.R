@@ -1,8 +1,6 @@
 # Required Libraries ------------------------------------------------------
 
 library(tidyverse)
-library(hrbrthemes)
-
 
 # Defining the log exponent function --------------------------------------
 
