@@ -1,6 +1,10 @@
 # Relevant libraries ----------------------------------------------------------
 library(tidyverse)
 library(reshape2) # for melt
+
+# Specifiy plotting config ----------------------------------------------------
+options(scipen = as.integer(conf$scientific_notation))
+
 # Relevant directories --------------------------------------------------------
 
 project_dir <- "C:/git/covid-19/"
@@ -11,7 +15,9 @@ download_dir <- paste0(project_dir, "downloaded_data/")
 source(paste0(project_dir, "code/state_wise_data.R"))
 source(paste0(project_dir, "code/plot_state_trends.R"))
 
-# State-wise Total Confirmed --------------------------------------------------
+# =============================================================================
+# State-wise Total Confirmed 
+# =============================================================================
 
 # Define function to get column with name `Total Confirmed` from any dataset
 get_total_confirmed <- . %>% select(`Total Confirmed`)
@@ -29,14 +35,19 @@ names(total_confirmed) <- c(names(states_data), "Date")
 
 # Plotting data
 plotting_data <- total_confirmed %>% 
-  melt(variable.name = "State", value.name = "TotalConfirmed") %>%
+  select(-TT) %>%  # do not want total numbers to screw y-axes scale!
+  reshape2::melt(variable.name = "State", value.name = "TotalConfirmed") %>%
   filter(State != "Date")
 
 plotting_data$Date <- rep(total_confirmed$Date,
-                          length(names(states_data)))
+                          length(unique(plotting_data$State)))
 
 # plot state-wise total confirmed for states with cases above a threshold
 plotting_data %>%
-  ggplot(mapping = aes(x = Date, y = TotalConfirmed)) + 
-  geom_line(mapping = aes(y = TotalConfirmed)) + 
-  facet_wrap(~ State)
+  ggplot(mapping = aes(x = Date, y = TotalConfirmed, color = State)) + 
+  geom_line(mapping = aes(y = TotalConfirmed), size = 1, show.legend = F) + 
+  xlab("") + 
+  # scale_y_continuous(trans = 'log10') + 
+  facet_wrap(~ State) +
+  ggtitle(paste0("Statewise India Covid-19 trends (Total Confirmed) as of ", 
+                 today()))
