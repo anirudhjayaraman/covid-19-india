@@ -13,7 +13,6 @@ download_dir <- paste0(project_dir, "downloaded_data/")
 
 # Source scripts to download, load, harvest and structure the data ------------
 source(paste0(project_dir, "code/state_wise_data.R"))
-source(paste0(project_dir, "code/plot_state_trends.R"))
 
 # =============================================================================
 # State-wise Total Confirmed 
