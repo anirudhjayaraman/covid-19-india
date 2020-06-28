@@ -7,7 +7,7 @@ All code are kept in code/
 - **harvest_data.R**: does what *source_data.R* does, and in addition also stitches some disaggregated raw data and ensures dates are in workable formats.
 - **state_wise_data.R**: collates state-wise data into state-specific time series datasets for each state. The data contains daily and cumulative confirmed, recovered and deceased cases for a given state from 14-Mar-2020. In order to check which state datasets are available at any given time:
 - **model_exponent.R**: Finds a linear relationship between the exponent of a data series and time stamps.
-- **covid19_analysis.R**: one-stop (WIP) script with all the analyses.
+- **covid19_analysis.R**: one-stop (WIP) script with state-wise analyses.
 
 # Some Insights from Modeling the Evolution of Total Confirmed Covid-19 Cases in India
 
@@ -15,7 +15,7 @@ India's Covid-19 situation can be explained by a simple model regressing an expo
 
 ![](output/plots/plot_03.png)
 
-# State-wise Covid-19 Status as of 25 June 2020
-![](output/plots/plot_13.png)
-![](output/plots/plot_14.png)
-![](output/plots/plot_15.png)
+# Latest state-wise Covid-19 Status
+![](output/plots/plot_total_confirmed.png)
+![](output/plots/plot_total_deceased.png)
+![](output/plots/plot_total_active.png)
