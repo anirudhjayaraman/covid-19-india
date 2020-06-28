@@ -57,7 +57,7 @@ model_exponent <- function(df, calibration_horizon = 30,
   plot_goodness_of_fit <- plot_data %>%
     ggplot(mapping = aes(x = exponents, y = adj_R_Sq)) + 
     geom_line(size = 1) + 
-    theme_ipsum() +
+    theme_light() +
     labs(title = "Optimal Exponent") + 
     xlab("Exponent") + 
     ylab("Adjusted R-Squared")
