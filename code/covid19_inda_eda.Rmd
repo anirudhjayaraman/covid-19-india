@@ -41,6 +41,8 @@ raw_datasets <- mget(ls()[grep("raw_data[0-9]", ls(), fixed = FALSE)])
 # Convert the patient level datasets from data.table to data.frame
 raw_datasets <- raw_datasets %>%
   lapply(as.data.frame)
+
+raw_datasets %>% map(.f = glimpse)
 ```
 
 Ensure information in the datasets is complete
@@ -136,7 +138,13 @@ for(i in 1:length(states)){
 }
 
 # Store curated state data in a list
-states_data <- mget(states)
+states_data <- mget(states)  # list of states 
+
+# States such as 'MH' and 'DL' can now be accessed directly
+states_data %>% names
+```
+```{r}
+states_data$MH %>% glimpse
 ```
 
 Visualize state-wise data
