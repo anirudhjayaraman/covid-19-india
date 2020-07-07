@@ -56,8 +56,6 @@ p1 <- plot_total_confirmed %>%
   ggtitle(paste0("Statewise India Covid-19 trends (Total Confirmed) as of ", 
                  today()))
 
-p1
-
 ggsave(filename = "output/plots/plot_total_confirmed.png", plot = p1)
 
 # Plot 2 ======================================================================

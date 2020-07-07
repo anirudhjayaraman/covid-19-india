@@ -1,9 +1,10 @@
 rm(list = ls())
 
 # Relevant Libraries ----------------------------------------------------------
-library(tidyverse)
-library(hrbrthemes)
-library(gridExtra)
+require(tidyverse)
+require(hrbrthemes)
+require(gridExtra)
+require(config)
 
 # Relevant Directories --------------------------------------------------------
 
@@ -11,28 +12,35 @@ project_dir <- "C:/git/covid-19/"
 output_dir <- paste0(project_dir, "output/")
 download_dir <- paste0(project_dir, "downloaded_data/")
 
+# Configurations --------------------------------------------------------------
+config <- config::get(file = paste0(project_dir, "conf/config.yml"))
+options(scipen = config$scientific_notation)
+
 # =============================================================================
-# Source and stitch the data
+# Source and stitch the data; also source code to model the exponent
 # =============================================================================
 
 source(paste0(project_dir, "code/harvest_data.R"))
+source(paste0(project_dir, "code/model_exponent.R"))
 
 # =============================================================================
 # Model the data
 # =============================================================================
 
-# Exclude the last 3-5 observations to model (train) the data
-model_data <- case_time_series[1:(nrow(case_time_series)-3), 
+# Model data
+model_data <- case_time_series[1:(nrow(case_time_series)), 
                                c("Date", "Total Confirmed")]
 
 # Plot Model Data -------------------------------------------------------------
 model_data %>%
-  # tail(50) %>%
   ggplot(aes(x = Date, y = `Total Confirmed`)) +
   geom_line(color="grey") +
   geom_point(shape=21, color="black", fill="#69b3a2", size=2) +
   theme_ipsum() +
   ggtitle("Evolution of Total Confirmed Covid-19 Cases")
+
+model_data %>% model_exponent(calibration_horizon = 45, logarithm = TRUE) 
+
 
 # -----------------------------------------------------------------------------
 # Model the Exponent
@@ -41,8 +49,11 @@ model_data %>%
 # Use log(Total Confirmed) as dependent variable
 model_data$`Log Total Confirmed` <- log(model_data$`Total Confirmed`)
 
+# Plot evolution of modeled exponent over different calibration periods...
+# Calibration periods are in days.
 
-calibration_periods <- c(20,25,30,35,40,45,50,55,60)
+calibration_periods <- c(5,7,15,30,45,60,75,90)
+
 exponent_plots <- list()
 adjRSq_plots <- list()
 adjRSq_densities <- list()
